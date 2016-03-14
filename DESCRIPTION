@@ -1,0 +1,21 @@
+Package: gtfsnetwork
+Type: Package
+Title: Quickly project networks in the general transit feed specification (gtfs)
+Version: 0.1
+Date: 2016-03-10
+Author: Charles Hans Thompson
+Maintainer: Charles Hans Thompson <hans.thompson1@gmail.com>
+Description: Creates edgelists, etc.
+License: GPL (>= 2)
+Depends:
+    dplyr,
+    lubridate,
+    R (>= 2.14.1)
+Imports:
+    dplyr,
+    lubridate
+Suggests:
+    knitr
+ZipData: FALSE
+Packaged: 2016-03-10 19:36:39 UTC; colinbroderick
+RoxygenNote: 5.0.1
