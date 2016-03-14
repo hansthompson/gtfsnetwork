@@ -15,7 +15,7 @@ gtfs2edgelist <- function(stop_times) {
     mutate(transit_time = abs((hour(hms(departure_time) - hms(arrival_time)) * -60) - 
                                minute(hms(departure_time) - hms(arrival_time)))) %>%
     mutate(departs_source = arrival_time, target_arrival = departure_time) %>%
-    select(src, target, transit_time, departs_source, target_arrival) 
+    select(source, target, transit_time, departs_source, target_arrival) 
 }
 
 #' @export filter_gtfs_edgelist
