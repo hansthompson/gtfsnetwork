@@ -1,41 +1,23 @@
-# gtfsnetwork
-### author: "Hans Thompson"
-### date: "March 13, 2016"
-
-## Installation
-```{r , include=FALSE}
+library(dplyr)
+library(stringr)
 library(devtools)
-install_github("hansthompson/gtfsnetwork")
+#install_github("hansthompson/gtfsnetwork")
 library(gtfsnetwork)
-```
 
-## Example
-
-```{r}
-library(lubridate)
-download.file("http://transitfeeds.com/p/people-mover/370/latest/download", 
-              destfile = "gtfs.zip")
-unzip("gtfs.zip")
-
+stops <- read.csv("stops.txt", stringsAsFactors = TRUE)
 trips <- read.csv("trips.txt", stringsAsFactors = TRUE)
 stop_times <- read.csv("stop_times.txt", stringsAsFactors = TRUE)
-stops <- read.csv("stops.txt", stringsAsFactors = TRUE)
 
-
-gtfs_el <- gtfs2edgelist(stop_times)
 starting_time <- hms("09:00:00")
-ending_time   <- hms("11:30:00")
+ending_time   <- hms("10:00:00")
 srv_id <- "1" # weekdays Monday-Friday for People Mover
 
+gtfs_el <- gtfs2edgelist(stop_times)
 filtered_gtfs_edge_list <- filter_srv_id(gtfs_edgelist = gtfs_el, trips, srv_id  = "1")
 filtered_gtfs_edge_list <- filter_gtfs_edgelist(gtfs_edgelist = filtered_gtfs_edge_list, 
                                                 start_time = starting_time, end_time = ending_time)
 
 filtered_gtfs_edge_list <- remove_duplicate_edges(filtered_gtfs_edge_list, trips)
-
-edges <- filtered_gtfs_edge_list %>% select(source, target, size = transit_time)
-
-library(igraph)
 
 filtered_gtfs_edge_list <- filtered_gtfs_edge_list %>% group_by(source, target) %>% mutate(n = length(source)) %>% 
   group_by(trip_id)
@@ -72,13 +54,7 @@ h4 <- simplify(graph.data.frame(as_edgelist(contract.vertices(h3,
                                 directed = T))
 
 V(h4)$name[str_detect(V(h4)$name, ",")] <- paste0(countCharOccurrences(",", V(h4)$name[str_detect(V(h4)$name, ",")]), "-nodes")
-stops$stop_id <- as.character(stops$stop_id)
 V(h4)$name[!str_detect(V(h4)$name, "-")] <- tolower(as.character(inner_join(data.frame(stop_id = as.character(V(h4)$name[!str_detect(V(h4)$name, "-")])), stops, by = "stop_id")$stop_name))
 V(h4)$label.cex = 0.75
 plot(h4, vertex.size = 2,
      edge.arrow.size=0.01)
-```
-
-
-
-
